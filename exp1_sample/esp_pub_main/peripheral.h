@@ -12,6 +12,7 @@
 #define FREE HIGH
 
 typedef void (*p_func)(void);
-typedef void (*p_callback)(char*, char*, unsigned int);
+typedef void (*p_callback_sub)(char*, char*, unsigned int);
+typedef void (*p_callback_pub)(const char*, const char*, unsigned int);
 
 #endif

@@ -11,7 +11,7 @@ const char* topic = "data/学籍番号"; // 送信するTopic
 
 
 /* メッセージ受信完了時に呼び出される関数 */
-void on_publish(char* topic, char* payload, unsigned int len) {
+void on_publish(const char* topic, const char* payload, unsigned int len) {
     Serial.print("publish topic  : ");
     Serial.println(topic);
     Serial.print("publish payload: ");

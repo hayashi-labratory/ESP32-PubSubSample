@@ -8,8 +8,8 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-p_callback _p_message = NULL;
-p_callback _p_publish = NULL;
+p_callback_sub _p_message = NULL;
+p_callback_pub _p_publish = NULL;
 p_func _p_connect = NULL;
 
 void ledOn(int led){
@@ -97,11 +97,11 @@ void mqttSetConnectCallback(p_func on_connect){
     _p_connect = on_connect;
 }
 
-void mqttSetSubscribeCallback(p_callback on_message){
+void mqttSetSubscribeCallback(p_callback_sub on_message){
     _p_message = on_message;
 }
 
-void mqttSetPublishCallback(p_callback on_publish){
+void mqttSetPublishCallback(p_callback_pub on_publish){
     _p_publish = on_publish;
 }
 
@@ -109,7 +109,7 @@ void mqttSubscribe(const char* topic){
     client.subscribe(topic);
 }
 
-void mqttPublish(char* topic, char* payload){
+void mqttPublish(const char* topic, const char* payload){
     client.publish(topic, payload);
     if (_p_publish != NULL){
         _p_publish(topic, payload, sizeof(payload));

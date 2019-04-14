@@ -13,11 +13,31 @@ p_callback_pub _p_publish = NULL;
 p_func _p_connect = NULL;
 
 void ledOn(int led){
-    digitalWrite(led, HIGH);
+    switch(led){
+        case LED1:
+        case LED2:
+        case LED3:
+        case LED4:
+        case LED5:
+            digitalWrite(led, HIGH);
+            break;
+        default:
+            break;
+    }
 }
 
 void ledOff(int led){
-    digitalWrite(led, LOW);
+    switch(led){
+        case LED1:
+        case LED2:
+        case LED3:
+        case LED4:
+        case LED5:
+            digitalWrite(led, LOW);
+            break;
+        default:
+            break;
+    }
 }
 
 int checkSwitch(int sw){

@@ -14,6 +14,7 @@ WiFiClient espClient;
 PubSubClient client(espClient);
 
 bool _mqtt_broker_connection = false;
+unsigned int _now_buzzer_hz = DEFAULT_BUZZER_HZ;
 p_callback_sub _p_message = NULL;
 p_callback_pub _p_publish = NULL;
 p_func _p_connect = NULL;
@@ -53,7 +54,12 @@ int checkSwitch(int sw){
     return digitalRead(sw);
 }
 
-void buzzerOn(){
+void buzzerOn(unsigned int hz){
+    if (hz != _now_buzzer_hz){
+        _now_buzzer_hz = hz;
+        ledcSetup(PWM_CH, hz, 8);
+        ledcAttachPin(BUZZER, PWM_CH);
+    }
     ledcWrite(PWM_CH, 128);
 }
 
@@ -165,7 +171,7 @@ void peripheralSetup(){
     pinMode(SWITCH2, INPUT);
 
     // PWM
-    ledcSetup(PWM_CH, 440, 8);
+    ledcSetup(PWM_CH, DEFAULT_BUZZER_HZ, 8);
     ledcAttachPin(BUZZER, PWM_CH);
     buzzerOff();
 

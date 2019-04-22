@@ -1,29 +1,24 @@
+/****************************************************
+ * ネットワーク実験　実験2サンプルプログラム（受信側）
+*****************************************************/
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <string.h>
 #include "peripheral.h"
 
-
-const char* ssid = "ssid";            // WiFiのSSID
-const char* password = "password";  // WiFiのパスワード
-const char* broker = "localhost";   // BrokerのIPアドレス
-int port = 1883;                    // Brokerのポート番号
+const char* ssid = "ssid";    		// WiFiのSSID
+const char* password = "password";	// WiFiのパスワード
+const char* broker = "localhost";	// BrokerのIPアドレス
+int port = 1883;					// Brokerのポート番号
 const char* topic = "data/学籍番号"; // 受信するTopic
 
 
 /* メッセージ受信完了時に呼び出される関数 */
 void on_message(char* topic, char* payload, unsigned int len) {
-    double value;
     Serial.print("topic  : ");
     Serial.println(topic);
     Serial.print("payload: ");
     Serial.println(payload);
-    /* 文字列をdouble型の数値に変換する */
-    value = atof(payload);
-
-    /* 受信した値がしきい値を超えた場合に知らせるコードをココに書く */
-    /* LEDを光らせる，ブザーを鳴らす...など */
-    // Program here
 }
 
 /* Brokerへの接続完了時に呼び出される関数 */

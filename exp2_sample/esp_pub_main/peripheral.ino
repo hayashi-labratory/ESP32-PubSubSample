@@ -1,3 +1,8 @@
+/********************************
+ * 実験基板用Peripheralライブラリ
+ * 
+ * 管理者以外は変更しないこと！
+*********************************/
 #include "peripheral.h"
 #define LED_WIFI 14
 #define BUZZER A10
@@ -8,6 +13,7 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+bool _mqtt_broker_connection = false;
 p_callback_sub _p_message = NULL;
 p_callback_pub _p_publish = NULL;
 p_func _p_connect = NULL;
@@ -60,7 +66,7 @@ bool checkWiFiConnection(const char* ssid, const char* pass){
         WiFi.begin(ssid, pass);
 
         if (WiFi.waitForConnectResult() != WL_CONNECTED) {
-            Serial.println("failed to connect");
+            Serial.println("Failed to connect WiFi...\n Retry after several seconds");
             digitalWrite(LED_WIFI, LOW);
             delay(1000);
             return false;
@@ -77,6 +83,7 @@ bool checkWiFiConnection(const char* ssid, const char* pass){
 bool checkMqttConnection(){
     // MQTT connection
     if (!client.connected()) {
+        // IDが重複しないように乱数を追加
         String clientID = "ESP32_DevkitC_32D-" + String(esp_random());
         Serial.println(clientID);
         client.connect(clientID.c_str());
@@ -85,11 +92,13 @@ bool checkMqttConnection(){
                 _p_connect();   
             }
             client.setCallback(_localCallbackFunction);
+            _mqtt_broker_connection = true;
         }
         else {
             Serial.println("MQTT connection failed: ");
             Serial.println(client.state());
             delay(1000);
+            _mqtt_broker_connection = false;
             return false;
         }
     }
@@ -126,10 +135,18 @@ void mqttSetPublishCallback(p_callback_pub on_publish){
 }
 
 void mqttSubscribe(const char* topic){
+    if(_mqtt_broker_connection == false){
+        Serial.println("[Error] No broker connection!");
+        return;
+    }
     client.subscribe(topic);
 }
 
 void mqttPublish(const char* topic, const char* payload){
+    if(_mqtt_broker_connection == false){
+        Serial.println("[Error] No broker connection!");
+        return;
+    }
     client.publish(topic, payload);
     if (_p_publish != NULL){
         _p_publish(topic, payload, sizeof(payload));

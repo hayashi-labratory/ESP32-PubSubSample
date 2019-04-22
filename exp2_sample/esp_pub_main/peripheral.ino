@@ -94,11 +94,11 @@ bool checkMqttConnection(){
         Serial.println(clientID);
         client.connect(clientID.c_str());
         if (client.connected()) {
+            _mqtt_broker_connection = true;
             if (_p_connect != NULL){
                 _p_connect();   
             }
             client.setCallback(_localCallbackFunction);
-            _mqtt_broker_connection = true;
         }
         else {
             Serial.println("MQTT connection failed: ");

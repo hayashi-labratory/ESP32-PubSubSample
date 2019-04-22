@@ -10,7 +10,7 @@ const char* ssid = "ssid";    		// WiFiのSSID
 const char* password = "password";	// WiFiのパスワード
 const char* broker = "localhost";	// BrokerのIPアドレス
 int port = 1883;					// Brokerのポート番号
-const char* topic = "data/学籍番号"; // 送信するTopic
+const char* topic = "data/在籍番号"; // 送信するTopic
 
 
 /* メッセージ受信完了時に呼び出される関数 */

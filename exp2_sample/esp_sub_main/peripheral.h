@@ -15,7 +15,7 @@
 #define SWITCH2 16
 #define PUSHED LOW
 #define FREE HIGH
-#define DEFAULT_BUZZER_HZ 800
+#define DEFAULT_BUZZER_HZ 2400
 
 typedef void (*p_func)(void);
 typedef void (*p_callback_sub)(char*, char*, unsigned int);

@@ -104,25 +104,25 @@ bool checkMqttConnection(){
             Serial.println("MQTT connection failed: ");
             switch(client.state()){
                 case -4:
-                    Serial.println("[Error] Broker connection timeout.");
+                    Serial.println("[MQTT Error] Broker connection timeout.");
                     break;
                 case -3:
-                    Serial.println("[Error] Network connection broken.");
+                    Serial.println("[MQTT Error] Network connection broken.");
                     break;
                 case -2:
-                    Serial.println("[Error] Network connection failed.");
+                    Serial.println("[MQTT Error] Network connection failed.");
                     break;
                 case -1:
-                    Serial.println("[Warning] Disconnect OK.");
+                    Serial.println("[MQTT Warning] Disconnect OK.");
                     break;
                 case 0:
                     break;
                 default:
-                    Serial.print("[Error] status code = ");
+                    Serial.print("[MQTT Error] status code = ");
                     Serial.println(client.state());
                     break;
             }
-            Serial.println(client.state());
+            //Serial.println(client.state());
             delay(1000);
             _mqtt_broker_connection = false;
             return false;

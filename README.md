@@ -2,8 +2,8 @@
 
 ## Description
 学生実験で使用するESP32マイコンのサンプルプログラム．  
-基本的には *esp_xxx_main.ino* の中身を書き換えます．
-細かな設定や処理については peripheral.ino/.hに分離して隠しています．
+基本的には *esp_xxx_main.ino* の中身を書き換えます．  
+細かな設定や処理については peripheral.ino/.hに分離して隠しています．  
 
 ## Folder description
 - **exp1_sample**  

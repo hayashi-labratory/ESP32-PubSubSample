@@ -19,6 +19,7 @@ p_callback_sub _p_message = NULL;
 p_callback_pub _p_publish = NULL;
 p_func _p_connect = NULL;
 
+/* LED点灯関数 */
 void ledOn(int led){
     switch(led){
         case LED1:
@@ -33,6 +34,7 @@ void ledOn(int led){
     }
 }
 
+/* LED消灯関数 */
 void ledOff(int led){
     switch(led){
         case LED1:
@@ -47,6 +49,7 @@ void ledOff(int led){
     }
 }
 
+/* スイッチ状態を取得する関数 */
 int checkSwitch(int sw){
     if (sw != SWITCH1 && sw != SWITCH2){
         return FREE;
@@ -54,30 +57,38 @@ int checkSwitch(int sw){
     return digitalRead(sw);
 }
 
+/* ブザーオン関数 */
 void buzzerOn(unsigned int hz){
     if (hz != _now_buzzer_hz){
+        /* 同じ周波数を再設定すると動作が止まるのでチェック */
         _now_buzzer_hz = hz;
         ledcSetup(PWM_CH, hz, 8);
         ledcAttachPin(BUZZER, PWM_CH);
     }
+    /* Duty比50% */
     ledcWrite(PWM_CH, 128);
 }
 
+/* ブザーオフ関数 */
 void buzzerOff(){
+    /* Duty比0% */
     ledcWrite(PWM_CH, 0);
 }
 
+/* WiFi接続関数 */
 bool checkWiFiConnection(const char* ssid, const char* pass){
     if (WiFi.status() != WL_CONNECTED) {
         WiFi.begin(ssid, pass);
 
         if (WiFi.waitForConnectResult() != WL_CONNECTED) {
+            /* WiFi接続失敗 */
             Serial.println("Failed to connect WiFi...\n Retry after several seconds");
             digitalWrite(LED_WIFI, LOW);
             delay(1000);
             return false;
         }
         else {
+            /* WiFi接続成功 */
             Serial.print("WiFi connected: ");
             Serial.println(WiFi.localIP());
             digitalWrite(LED_WIFI, HIGH);
@@ -86,6 +97,7 @@ bool checkWiFiConnection(const char* ssid, const char* pass){
     return true;
 }
 
+/* MQTT接続関数 */
 bool checkMqttConnection(){
     // MQTT connection
     if (!client.connected()) {
@@ -94,6 +106,7 @@ bool checkMqttConnection(){
         Serial.println(clientID);
         client.connect(clientID.c_str());
         if (client.connected()) {
+            // Broker接続成功
             _mqtt_broker_connection = true;
             if (_p_connect != NULL){
                 _p_connect();   
@@ -139,7 +152,9 @@ void mqttSetServer(const char* broker, int port){
     client.setServer(broker, port);
 }
 
+/* MQTTメッセージ受信時のコールバック関数（1次） */
 void _localCallbackFunction(char* topic, byte* payload, unsigned int len){
+    /* バイト列を文字列に変換する */
     char buf[MQTT_MAX_PACKET_SIZE];
     payload[len] = '\0';
     snprintf(buf, sizeof(buf), "%s", payload);
@@ -148,14 +163,17 @@ void _localCallbackFunction(char* topic, byte* payload, unsigned int len){
     }
 }
 
+/* Broker接続成功時のコールバック設定関数 */
 void mqttSetConnectCallback(p_func on_connect){
     _p_connect = on_connect;
 }
 
+/* message受信時のコールバック設定関数 */
 void mqttSetSubscribeCallback(p_callback_sub on_message){
     _p_message = on_message;
 }
 
+/* message送信時のコールバック設定関数 */
 void mqttSetPublishCallback(p_callback_pub on_publish){
     _p_publish = on_publish;
 }
@@ -180,7 +198,7 @@ void mqttPublish(const char* topic, const char* payload){
 }
 
 void peripheralSetup(){
-    // IO
+    // IO設定
     pinMode(LED1, OUTPUT);
     pinMode(LED2, OUTPUT);
     pinMode(LED3, OUTPUT);
@@ -190,7 +208,7 @@ void peripheralSetup(){
     pinMode(SWITCH1, INPUT);
     pinMode(SWITCH2, INPUT);
 
-    // PWM
+    // PWM設定
     ledcSetup(PWM_CH, DEFAULT_BUZZER_HZ, 8);
     ledcAttachPin(BUZZER, PWM_CH);
     buzzerOff();

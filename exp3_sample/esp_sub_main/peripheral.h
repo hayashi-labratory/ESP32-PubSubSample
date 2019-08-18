@@ -17,10 +17,12 @@
 #define FREE HIGH
 #define DEFAULT_BUZZER_HZ 2400
 
+/* コールバック関数用 */
 typedef void (*p_func)(void);
 typedef void (*p_callback_sub)(char*, char*, unsigned int);
 typedef void (*p_callback_pub)(const char*, const char*, unsigned int);
 
+/* デフォルト引数を設定 */
 void buzzerOn(unsigned int hz = DEFAULT_BUZZER_HZ);
 
 #endif

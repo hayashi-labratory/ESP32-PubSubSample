@@ -94,12 +94,12 @@ bool checkWiFiConnection(const char* ssid, const char* pass){
             digitalWrite(LED_WIFI, HIGH);
         }
     }
-	else if (digitalRead(LED_WIFI) == LOW) {
-		/* WiFi接続成功 */
-		Serial.print("WiFi connected: ");
-		Serial.println(WiFi.localIP());
-		digitalWrite(LED_WIFI, HIGH);
-	}
+    else if (digitalRead(LED_WIFI) == LOW) {
+        /* WiFi接続成功 */
+        Serial.print("WiFi connected: ");
+        Serial.println(WiFi.localIP());
+        digitalWrite(LED_WIFI, HIGH);
+    }
     return true;
 }
 
